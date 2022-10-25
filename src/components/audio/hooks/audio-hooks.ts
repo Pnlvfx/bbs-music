@@ -1,18 +1,24 @@
+import TrackPlayer, { Track } from "react-native-track-player";
 import { BASE_URL } from "../../../config/config";
+import { useCurrentTrack } from "./useCurrentTrack";
 
 const audio = {
-    getSongs: async (callback: Function) => {
+    getSongs: async () => {
         try {
-          const url = `${BASE_URL}/music/all`;
+          const url = `${BASE_URL}/music`;
           const res = await fetch(url, {
             method: 'GET',
           });
           const data = await res.json();
-          return callback(data);
+          if (res.ok) {
+            return data as Track[]
+          } else {
+            throw new Error(data?.msg);
+          }
         } catch (err) {
-          console.log(err);
+          throw console.log(err);
         }
-      }
+      },
 }
 
 export default audio;

@@ -1,24 +1,27 @@
-import {Text, TouchableWithoutFeedback, View} from 'react-native';
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
+import React, { useRef, useState } from 'react';
+import SearchModal from './SearchModal';
+import SearchHeader from '../components/search/SearchHeader';
 
-const SearchScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<SearchStackNavigatorProps>>();
+const SearchScreen = () => { // CREATE A MODAL FOR THE SHOW MODAL PROP AND FIX EVERYTHING
+  const [showModal, setShowModal] = useState(false);
+  const textInputRef = useRef<TextInput>(null);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  }
+
   return (
-    <View className=''>
-      <TouchableWithoutFeedback
-        className="justify-start items-center flex-row w-full"
-        onPress={() => {
-          navigation.navigate('searchModal')
-        }}
-      >
+    <View className='w-full h-full'>
+      {!showModal && <SearchHeader />}
+      <TouchableWithoutFeedback onPress={toggleModal}>
         <View className="rounded-md flex-row w-full h-[48px] pl-3 bg-bbaby-brighter items-center">
           <Text className="text-bbaby-text w-full">
             What do you want to listen to?
           </Text>
         </View>
       </TouchableWithoutFeedback>
+      {showModal && <SearchModal toggleModal={toggleModal} textInputRef={textInputRef} />}
     </View>
   );
 };

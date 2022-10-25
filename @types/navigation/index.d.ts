@@ -1,5 +1,11 @@
-interface DrawerNavigator {
+type DrawerNavigator = {
+    Drawer;
+}
 
+type MainStackNavigatorProps = {
+    Root;
+    Auth;
+    Song;
 }
 
 type LibraryStackNavigatorProps = {

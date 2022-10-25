@@ -13,11 +13,6 @@ const LibraryStackNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         contentStyle: {backgroundColor: COLORS.default},
-        header: (props) => {
-          return (
-            <PlaylistHeader {...props} />
-          )
-        }
       }}>
       <Stack.Screen 
         name="library" 

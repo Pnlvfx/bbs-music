@@ -10,14 +10,16 @@ const PlaylistHeader = (props: NativeStackHeaderProps) => {
   return (
     <View className='h-[200px] overflow-hidden relative'>
       <BluGradient className='absolute' />
-      <View className='absolute mt-10'>
+      <View className='absolute mt-11'>
         <View className=''>
-          <View className='rounded-full mx-4 my-2 w-9 h-9 flex-row items-center justify-center' style={{backgroundColor: 'rgba(24, 24, 24, 0.23)'}}>
-            <TouchableWithoutFeedback onPress={(e) => {
-              e.preventDefault();
-              props.navigation.goBack();
-            }}>
-              <DropdownIcon className='rotate-90' />
+          <View className='rounded-full mx-4 mb-2 mt-4 w-8 h-8 flex-row items-center justify-center z-50' style={{backgroundColor: 'rgba(24, 24, 24, 0.23)'}}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                props.navigation.goBack();
+              }}>
+              <View className='h-full w-full z-50 items-center justify-center'>
+                <DropdownIcon width={20} height={20} className='rotate-90' />
+              </View>
             </TouchableWithoutFeedback>
           </View>
           <View className='mx-4'>
@@ -31,9 +33,9 @@ const PlaylistHeader = (props: NativeStackHeaderProps) => {
           
         }}>
           {playing ? (
-            <PauseIcon style={{fill: 'black'}} />
+            <PauseIcon fill={'black'} />
           ) : (
-            <PlayIcon className='fill-black' />
+            <PlayIcon fill={'black'} />
           )}
         </TouchableOpacity>
       </View>

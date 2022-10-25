@@ -6,3 +6,8 @@ export const COLORS = {
   text: '#d4d4d4',
   text_darker: '#606163',
 };
+
+export const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json'
+}

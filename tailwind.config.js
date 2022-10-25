@@ -11,6 +11,7 @@ module.exports = {
           brighter: '#181818',
           text: '#D4d4d4',
           text_darker: '#606163',
+          blue: '#24A0ED',
         },
       },
     },

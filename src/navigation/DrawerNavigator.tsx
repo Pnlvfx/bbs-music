@@ -15,6 +15,10 @@ const DrawerNavigator = () => {
       id="rightDrawer"
       drawerContent={props => <UserHeader {...props} />}
       screenOptions={{
+        drawerStyle: {
+          width: '100%',
+          backgroundColor: COLORS.default
+        },
         header: () => {
           return <BackHeader />;
         },

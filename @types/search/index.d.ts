@@ -1,4 +1,11 @@
 type SearchResult = {
-    title: string
-    link: string
+    songs: Songs[]
+}
+
+type Songs = {
+    name: string
+    artist: string
+    image: [
+        
+    ]
 }

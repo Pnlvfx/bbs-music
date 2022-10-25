@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableHighlight } from 'react-native';
 import React from 'react';
-import { BASE_URL } from '../../config/config';
+import { BASE_URL, STATIC_URL } from '../../config/config';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAudioContext } from '../audio/AudioProvider';
@@ -13,8 +13,8 @@ const LibraryWidget = () => {
     <TouchableHighlight onPress={() => {
       navigation.navigate('playlist')
     }}>
-      <View className='flex-row py-2 items-center mb-4'>
-        <Image className='w-[60px] h-[60px]' source={{uri: `${BASE_URL}/images/icons/c18-art.jpeg`}} />
+      <View className='flex-row items-center'>
+        <Image className='w-[60px] h-[60px]' source={{uri: `${STATIC_URL}/images/icons/c18-art.jpeg`}} />
         <View className='ml-2'>
           <Text className='text-bbaby-text font-semibold'>Downloaded Songs</Text>
           <View className='flex-row'>

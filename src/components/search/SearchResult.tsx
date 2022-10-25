@@ -1,27 +1,27 @@
-import { Text, Image} from 'react-native';
+import { Text, Image, View, ActivityIndicator} from 'react-native';
 import React, { useState } from 'react';
 import {BASE_URL} from '../../config/config';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useAudioContext } from '../audio/AudioProvider';
 import { useTimeMsg } from '../main/TimeMsgProvider';
-import audio from '../audio/hooks/audio-hooks';
-import { Track } from 'react-native-track-player';
+import TrackPlayer, { Track } from 'react-native-track-player';
+import { useAudioContext } from '../audio/AudioProvider';
 
 type SearchResultProps = {
-  result: SearchResult
+  result: SearchResult['songs'][0]
 }
 
 const SearchResult = ({result}: SearchResultProps) => {
-  const {setSongs} = useAudioContext();
   const message = useTimeMsg();
   const [loading, setLoading] = useState(false);
+  const {refreshSongs} = useAudioContext();
 
   const downloadMusic = async () => {
     try {
       setLoading(true);
       const url = `${BASE_URL}/music/download`;
       const body = JSON.stringify({
-        url: result.link
+        artist: result.artist,
+        song: result.name
       });
       const headers = {
         Accept: 'application/json',
@@ -32,9 +32,10 @@ const SearchResult = ({result}: SearchResultProps) => {
         headers,
         body
       });
-      const songs = await audio.getSongs(setSongs)
       const data = await res.json() as Track;
       if (res.ok) {
+        await TrackPlayer.add(data, 0);
+        await refreshSongs();
         message.setMessage({value: 'New song added to your playlist!', status: 'success'});
       }
       setLoading(false);
@@ -45,14 +46,22 @@ const SearchResult = ({result}: SearchResultProps) => {
 
   return (
     <TouchableOpacity 
-      onPress={() => downloadMusic()} 
+      onPress={downloadMusic} 
       className={`flex-row items-center p-3 overflow-hidden`}
     >
-      <Image 
-        className='w-10 h-10 rounded' 
-        source={{uri: `${BASE_URL}/images/icons/c18-art.jpeg`}} 
-      />
-      <Text className="text-bbaby-text pl-3 font-bold mr-12">{result.title}</Text>
+      <View className='relative w-10 h-10'>
+        <Image 
+          className='w-10 h-10 rounded'
+          source={{uri: result.image[1]['#text']}} 
+        />
+        {loading && <ActivityIndicator color={'black'} className='absolute w-10 h-10' />}
+      </View>
+      <View className='flex-row pr-2'>
+        <Text className="text-bbaby-text pl-3 font-bold">{result.artist}</Text>
+        <Text className="text-bbaby-text pl-1 font-bold">
+          {result.name.length >= 30 ?  `${result.name.substring(0, 30)}...` : result.name}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };
