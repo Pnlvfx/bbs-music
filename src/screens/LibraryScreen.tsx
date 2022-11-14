@@ -11,7 +11,7 @@ const LibraryScreen = () => {
       <View className='mt-2 mb-3'>
         <Text className='text-bbaby-text text-[13px] font-semibold mb-[6px]'>Recently played</Text>
       </View>
-      <LibraryWidget />
+      <LibraryWidget name='Liked Songs' />
     </View>
   )
 }

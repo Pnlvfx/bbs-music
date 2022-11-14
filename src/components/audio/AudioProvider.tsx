@@ -1,18 +1,19 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 import TrackPlayer, { State, Track } from "react-native-track-player";
+import { catchErrorWithMessage } from "../../config/common";
 import { useSession } from "../auth/UserProvider";
+import { useMessage } from "../main/TimeMsgProvider";
 import Audio from "./Audio";
-import audio from "./hooks/audio-hooks";
 import { useCurrentTrack } from "./hooks/useCurrentTrack";
 import AppPlayer from "./utils/AppPlayer";
 
 interface AudioContext {
     playing: boolean
     setPlaying: Dispatch<SetStateAction<boolean>>
-    songs: Track[]
     playPause: () => Promise<void>
     playSong: (index: number) => Promise<void>
-    refreshSongs: () => Promise<void>
+    track: Track
 }
 
 const AudioContext = createContext<AudioContext | {}>({});
@@ -22,37 +23,41 @@ interface AudioContextProvider {
 }
 
 export const AudioContextProvider = ({children}: AudioContextProvider) => {
-    const [songs, setSongs] = useState<Track[] | []>([]);
     const [playing, setPlaying] = useState(false);
     const {session, isLoading} = useSession();
     const [isReady, setIsReady] = useState(false);
+    const message = useMessage();
+    const track = useCurrentTrack();
 
     const playPause = async () => {
-        const state = await TrackPlayer.getState();
-        if (state === State.Playing) {
-          TrackPlayer.pause();
-          setPlaying(false);
-        }
-        if (state === State.Paused) {
-          TrackPlayer.play();
-          setPlaying(true);
-        }
-        if (state === State.Ready) {
-          TrackPlayer.play();
-          setPlaying(true);
+        try {
+            const state = await TrackPlayer.getState();
+            if (state === State.Playing) {
+            TrackPlayer.pause();
+            setPlaying(false);
+            }
+            if (state === State.Paused) {
+            TrackPlayer.play();
+            setPlaying(true);
+            }
+            if (state === State.Ready) {
+            TrackPlayer.play();
+            setPlaying(true);
+            }
+        } catch (err) {
+            console.log(err), 'PlayPause';
         }
     }
 
     const playSong = async (index: number) => {
-        setPlaying(true);
-        TrackPlayer.skip(index);
-        TrackPlayer.play();
+        try {
+            setPlaying(true);
+            await TrackPlayer.skip(index);
+            await TrackPlayer.play();
+        } catch (err) {
+            console.log(err, 'playSong');
+        }
     };
-
-    const refreshSongs = async () => {
-        const s = await TrackPlayer.getQueue();
-        setSongs(s);
-    }
 
     useEffect(() => {
         if (isLoading) return;
@@ -62,7 +67,7 @@ export const AudioContextProvider = ({children}: AudioContextProvider) => {
                 await AppPlayer.initializePlayer();
                 setIsReady(true);
             } catch (err) {
-                
+                catchErrorWithMessage(err, message);
             }
         }
         run();
@@ -71,10 +76,15 @@ export const AudioContextProvider = ({children}: AudioContextProvider) => {
     useEffect(() => {
         if (!isReady) return;
         const run = async () => {
-            const s = await audio.getSongs();
-            setSongs(s);
-            //TrackPlayer.reset();
-            TrackPlayer.add(s);
+            try {
+                const last_song = await AsyncStorage.getItem('last_played');
+                if (last_song) {
+                    await TrackPlayer.reset();
+                    await TrackPlayer.add(JSON.parse(last_song));
+                }
+            } catch (err) {
+                console.log(err, 'audioProvider');
+            }
         }
         run();
       }, [isReady]);
@@ -83,13 +93,12 @@ export const AudioContextProvider = ({children}: AudioContextProvider) => {
         <AudioContext.Provider value={{
             playing,
             setPlaying,
-            songs,
             playPause,
             playSong,
-            refreshSongs,
+            track
         }}>
             {children}
-            {songs && <Audio />}
+            {track && <Audio />}
         </AudioContext.Provider>
     )
 }

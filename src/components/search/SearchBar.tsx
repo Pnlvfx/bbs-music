@@ -1,67 +1,71 @@
 import {View, TextInput, TouchableOpacity} from 'react-native';
-import React, {Dispatch, RefObject, SetStateAction, useRef, useState} from 'react';
-import {BASE_URL, COLORS} from '../../config/config';
+import React, { Dispatch, RefObject, SetStateAction, useEffect, useState} from 'react';
+import { COLORS} from '../../config/config';
 import { CloseIcon, SearchIcon } from '../../config/SVG';
-import { useSearchContext } from './SearchProvider';
+import { catchErrorWithMessage } from '../../config/common';
+import { useMessage } from '../main/TimeMsgProvider';
+import { SearchTrack } from '../../../@types/search';
+import trackapis from '../API/trackAPI';
 
 type SearchBar = {
-  setResults: Dispatch<SetStateAction<SearchResult | null>>
   textInputRef: RefObject<TextInput>
+  setResults: Dispatch<SetStateAction<SearchTrack | undefined>>
 }
 
-const SearchBar = ({ setResults, textInputRef }: SearchBar) => {
-  const {text, setText} = useSearchContext();
+const SearchBar = ({ textInputRef, setResults }: SearchBar) => {
   const [inputLength, setInputLength] = useState(0);
+  const [text, setText] = useState('');
+  const message = useMessage();
 
-  const searchMusic = async () => {
+  const search = async () => {
     try {
-      const url = `${BASE_URL}/music/search?text=${text}`;
-      const headers = {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      };
-      const res = await fetch(url, {
-        method: 'get',
-        headers,
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        console.log(data);
-      } else {
-        console.log(data);
-        setResults(data);
-      }
+      const _results = await trackapis.search(text);
+      setResults(_results);
     } catch (err) {
-      console.log(err);
+      catchErrorWithMessage(err, message);
     }
   };
 
+  useEffect(() => { // search
+    if (!text || text.length < 1) return;
+    const timer = setTimeout(() => {
+      search();
+    }, 300)
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [text])
+
   return (
     <View className="justify-start items-center flex-row w-full">
-      <View className="rounded-md flex-row w-full pl-2 pr-2 py-2 bg-[#121212] items-center">
-        <View>
-          <SearchIcon fill={'white'} height={18} width={18} />
+      <View className="rounded-md flex-row flex-1 bg-[#121212] items-center">
+        <View className='flex-1 flex-row p-2 items-center'>
+          <View>
+            <SearchIcon fill={'white'} height={18} width={18} />
+          </View>
+          <TextInput
+            ref={textInputRef}
+            placeholderTextColor={COLORS.text_darker}
+            className="text-bbaby-text font-bold flex-1 h-full pl-2"
+            placeholder="What do you want to listen to?"
+            onChangeText={text => {
+              setText(text);
+              setInputLength(text.length);
+            }}
+            onSubmitEditing={search}
+            blurOnSubmit
+            value={text}
+          />
         </View>
-        <TextInput
-          ref={textInputRef}
-          placeholderTextColor={COLORS.text_darker}
-          className="text-bbaby-text font-bold flex-1 h-full pl-2"
-          placeholder="What do you want to listen to?"
-          onChangeText={text => {
-            searchMusic();
-            setText(text);
-            setInputLength(text.length);
-          }}
-          onSubmitEditing={searchMusic}
-          blurOnSubmit
-          value={text}
-        />
         {inputLength >= 1 && (
-          <TouchableOpacity onPress={() => {
-            setText('');
-            setInputLength(0)
-          }}>
-            <View className='h-4 w-4'>
+          <TouchableOpacity
+            className=''
+            onPress={() => {
+              setText('');
+              setInputLength(0)
+            }}
+          >
+            <View className='p-2'>
               <CloseIcon height={16} width={16} />
             </View>
           </TouchableOpacity>

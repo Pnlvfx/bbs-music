@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import { COLORS } from '../config/config';
-import { HomeIcon, LibraryIcon, SearchIcon } from '../config/SVG';
+import { HomeIcon, LibraryIcon, SearchIcon, SearchIconOpen } from '../config/SVG';
 import StackNavigator from './StackNavigator';
 import SearchStackNavigator from './SearchStackNavigator';
 import LibraryStackNavigator from './LibraryStackNavigator';
@@ -15,13 +15,14 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       tabBar={(props) => <CustomTabNavigator {...props} />}
+      initialRouteName={'Home'}
       screenOptions={{
         tabBarStyle: {backgroundColor: 'transparent', height: 96},
         tabBarActiveTintColor: COLORS.text,
         tabBarInactiveTintColor: COLORS.text_darker,
         headerStyle: {elevation: 0}
       }}
-      >
+    >
       <Tab.Screen
         name="Home"
         component={StackNavigator}
@@ -39,11 +40,23 @@ const TabNavigator = () => {
         component={SearchStackNavigator}
         options={{
           headerShown: false,
-          tabBarIcon: ({color, size}) => {
+          tabBarIcon: ({focused, color, size}) => {
             return (
-              <SearchIcon width={size} fill={color} height={size} />
-          )},
+              <>
+              {focused ? (
+                <SearchIconOpen width={size} fill={color} height={size} />
+              ) : (
+                <SearchIcon width={size} fill={color} height={size} />
+              )}
+              </>
+          )}
         }}
+        listeners={({navigation}) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('Search');
+          }
+        })}
       />
       <Tab.Screen
         name="Library"

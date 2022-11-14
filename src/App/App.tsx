@@ -7,6 +7,7 @@ import MainStackNavigator from '../navigation/MainStackNavigator';
 import { TimeMsgContextProvider } from '../components/main/TimeMsgProvider';
 import TimeMsg from '../components/main/TimeMsg';
 import { UserContextProvider } from '../components/auth/UserProvider';
+import NetStatus from '../components/main/NetStatus';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
             <MainStackNavigator />
           </NavigationContainer>
           <TimeMsg />
+          <NetStatus />
       </AudioContextProvider>
       </TimeMsgContextProvider>
     </UserContextProvider>

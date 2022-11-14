@@ -5,7 +5,6 @@ type DrawerNavigator = {
 type MainStackNavigatorProps = {
     Root;
     Auth;
-    Song;
 }
 
 type LibraryStackNavigatorProps = {

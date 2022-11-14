@@ -6,16 +6,19 @@ import { getUserIP } from '../components/API/oauthAPI';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useMessage } from '../components/main/TimeMsgProvider';
+import { catchErrorWithMessage } from '../config/common';
 
 const AuthScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackNavigatorProps>>();
+  const message = useMessage();
   
   useEffect(() =>{
     GoogleSignin.configure({
-      webClientId: '527300585899-8156ru74g2pk2th1fdqq91uelqcqhfu0.apps.googleusercontent.com',
+      webClientId: process.env.GOOGLE_API_KEY,
       offlineAccess: true,
       forceCodeForRefreshToken: true,
-      iosClientId: '527300585899-8156ru74g2pk2th1fdqq91uelqcqhfu0.apps.googleusercontent.com'
+      iosClientId: process.env.GOOGLE_API_KEY
     })
   }, []);
 
@@ -45,15 +48,16 @@ const AuthScreen = () => {
         headers,
         credentials: 'include'
       });
-      const data = await res.json() as SessionProps;
+      const data = await res.json();
       if (!res.ok) {
-        console.log(data);
+        message.setMessage({value: data?.msg, status: 'error'});
       } else {
         await AsyncStorage.setItem('session', JSON.stringify(data));
         navigation.navigate('Root');
+        return data as SessionProps;
       }
     } catch (err) {
-      console.log(err);
+      catchErrorWithMessage(err, message);
     }
   }
 

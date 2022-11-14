@@ -24,7 +24,7 @@ class AppPlayer {
                 progressUpdateEventInterval: 2,
             });
         } catch (err) {
-            console.log(err);
+            console.log(err, 'appPlayer');
         }
     }
     

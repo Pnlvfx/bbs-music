@@ -9,9 +9,10 @@ module.exports = {
         bbaby: {
           default: '#121212',
           brighter: '#181818',
-          text: '#D4d4d4',
+          text: '#D4D4D4',
           text_darker: '#606163',
           blue: '#24A0ED',
+          border: '#323334'
         },
       },
     },

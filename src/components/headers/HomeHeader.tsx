@@ -17,7 +17,7 @@ const HomeHeader = (props: BottomTabHeaderProps) => {
             <TouchableWithoutFeedback onPress={() => {
               navigation.openDrawer();
             }}>
-              <Image source={{uri: session?.user.avatar}} className='w-full h-full rounded-full' />
+              <Image source={{uri: session?.user?.avatar}} className='w-full h-full rounded-full' />
             </TouchableWithoutFeedback>
           </View>
         )}

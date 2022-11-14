@@ -1,14 +1,13 @@
 import { ScrollView } from 'react-native';
 import React from 'react';
 import PlaylistContent from '../components/playlist/PlaylistContent';
-import { useAudioContext } from '../components/audio/AudioProvider';
+import { useLibraryContext } from '../components/library/LibraryProvider';
 
 const PlaylistScreen = () => {
-  const {songs} = useAudioContext();
-
+  const {likedSongs} = useLibraryContext();
   return (
     <ScrollView className='mt-7'>
-      {songs.map((song, index) => (
+      {likedSongs.map((song, index) => (
         <PlaylistContent key={index} song={song} index={index} />
       ))}
     </ScrollView>

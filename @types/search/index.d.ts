@@ -1,11 +1,14 @@
-type SearchResult = {
-    songs: Songs[]
+import { Track } from "react-native-track-player";
+
+type SearchTrack = {
+    songs: TrackSearch[]
 }
 
-type Songs = {
-    name: string
-    artist: string
-    image: [
-        
-    ]
+interface TrackSearch extends Track {
+    isSaved: boolean
+}
+
+type imageProps = {
+    '#text': string
+    size: string
 }

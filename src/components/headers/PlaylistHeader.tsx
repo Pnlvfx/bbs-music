@@ -3,9 +3,11 @@ import React from 'react';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { BluGradient, DropdownIcon, PauseIcon, PlayIcon } from '../../config/SVG';
 import { useAudioContext } from '../audio/AudioProvider';
+import { useLibraryContext } from '../library/LibraryProvider';
 
 const PlaylistHeader = (props: NativeStackHeaderProps) => {
-    const {songs, playing} = useAudioContext();
+    const {playing} = useAudioContext();
+    const {likedSongs} = useLibraryContext();
 
   return (
     <View className='h-[200px] overflow-hidden relative'>
@@ -23,15 +25,13 @@ const PlaylistHeader = (props: NativeStackHeaderProps) => {
             </TouchableWithoutFeedback>
           </View>
           <View className='mx-4'>
-            <Text className='text-bbaby-text text-2xl font-bold'>Downloaded Songs</Text>
-            <Text className='text-bbaby-text_darker leading-4 mt-1'>{songs.length} songs</Text>
+            <Text className='text-bbaby-text text-2xl font-bold'>Liked Songs</Text>
+            <Text className='text-bbaby-text_darker leading-4 mt-1'>{likedSongs.length} songs</Text>
           </View>
         </View>
       </View>
       <View className='bg-blue-400 absolute bottom-4 rounded-full p-4 right-4'>
-        <TouchableOpacity onPress={() => {
-          
-        }}>
+        <TouchableOpacity>
           {playing ? (
             <PauseIcon fill={'black'} />
           ) : (

@@ -1,8 +1,7 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import UserHeader from '../components/headers/UserHeader';
+import UserHeader from '../components/user/UserHeader';
 import {COLORS} from '../config/config';
-import BackHeader from '../components/headers/BackHeader';
 import TabNavigator from './TabNavigator';
 
 const Drawer = createDrawerNavigator();
@@ -19,9 +18,7 @@ const DrawerNavigator = () => {
           width: '100%',
           backgroundColor: COLORS.default
         },
-        header: () => {
-          return <BackHeader />;
-        },
+        headerShown: false,
         drawerActiveTintColor: COLORS.text,
         drawerInactiveTintColor: COLORS.text_darker,
         headerStyle: {backgroundColor: COLORS.default},

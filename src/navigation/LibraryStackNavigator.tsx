@@ -5,40 +5,43 @@ import LibraryScreen from '../screens/LibraryScreen';
 import PlaylistScreen from '../screens/PlaylistScreen';
 import PlaylistHeader from '../components/headers/PlaylistHeader';
 import HomeHeader from '../components/headers/HomeHeader';
+import { LibraryContextProvider } from '../components/library/LibraryProvider';
 
 const Stack = createNativeStackNavigator<LibraryStackNavigatorProps>();
 
 const LibraryStackNavigator = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        contentStyle: {backgroundColor: COLORS.default},
-      }}>
-      <Stack.Screen 
-        name="library" 
-        component={LibraryScreen} 
-        options={{
-          title: 'Library',
-          header: (props) => {
-            return (
-              <HomeHeader {...props} />
-            )
-          }
-        }} 
-      />
-      <Stack.Screen 
-        name='playlist' 
-        component={PlaylistScreen} 
-        options={{
-          title: 'Playlist',
-          header: (props) => {
-            return (
-              <PlaylistHeader {...props} />
-            )
-          }
-        }} 
-      />
-    </Stack.Navigator>
+    <LibraryContextProvider>
+      <Stack.Navigator
+        screenOptions={{
+          contentStyle: {backgroundColor: COLORS.default},
+        }}>
+        <Stack.Screen 
+          name="library" 
+          component={LibraryScreen}
+          options={{
+            title: 'Library',
+            header: (props) => {
+              return (
+                <HomeHeader {...props} />
+              )
+            }
+          }}
+        />
+        <Stack.Screen 
+          name='playlist' 
+          component={PlaylistScreen} 
+          options={{
+            title: 'Playlist',
+            header: (props) => {
+              return (
+                <PlaylistHeader {...props} />
+              )
+            }
+          }} 
+        />
+      </Stack.Navigator>
+    </LibraryContextProvider>
   );
 };
 

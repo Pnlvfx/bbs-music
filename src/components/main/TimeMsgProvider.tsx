@@ -25,8 +25,7 @@ export const TimeMsgContextProvider = ({children}: TimeMsgContextProvider) => {
         status:'',
         time: 8000,
     }
-     const [message, setMessage] = useState(_status
-        );
+     const [message, setMessage] = useState(_status);
     return (
         <TimeMsgContext.Provider value={{
             message,
@@ -37,7 +36,7 @@ export const TimeMsgContextProvider = ({children}: TimeMsgContextProvider) => {
     )
 }
 
-export const useTimeMsg = () => {
+export const useMessage = () => {
     const context = useContext(TimeMsgContext) as TimeMsgContextProps;
     if (!context) {
         throw new Error(

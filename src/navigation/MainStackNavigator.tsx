@@ -4,7 +4,6 @@ import DrawerNavigator from './DrawerNavigator';
 import AuthScreen from '../screens/AuthScreen';
 import { useSession } from '../components/auth/UserProvider';
 import { ActivityIndicator } from 'react-native';
-import SongScreen from '../screens/SongModal';
 
 const Stack = createNativeStackNavigator<MainStackNavigatorProps>();
 

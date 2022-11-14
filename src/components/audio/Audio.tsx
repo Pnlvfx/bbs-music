@@ -1,20 +1,29 @@
 import {View, Text, Image, TouchableWithoutFeedback} from 'react-native';
 import React, { useState } from 'react';
 import { useAudioContext } from './AudioProvider';
-import TrackPlayer, {State, useProgress} from 'react-native-track-player';
+import TrackPlayer, {useProgress} from 'react-native-track-player';
 import { PauseIcon, PlayIcon } from '../../config/SVG';
 import Slider from '@react-native-community/slider';
-import { useCurrentTrack } from './hooks/useCurrentTrack';
 import SongModal from '../../screens/SongModal';
+import { useSession } from '../auth/UserProvider';
+import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Audio = () => {
-  const { playPause, playing } = useAudioContext();
+  const { playPause, playing, track } = useAudioContext();
   const [show, setShow] = useState(false);
   const progress = useProgress();
-  const track = useCurrentTrack();
+  const {session} = useSession();
 
-
-  if (!track?.artwork || !track.title || !track.artist || !track.duration) return null;
+  useEffect(() => { // every time a song change!!
+    if (!track) return;
+    const get = async () => {
+      await AsyncStorage.setItem('last_played', JSON.stringify(track));
+    }
+    get()
+  }, [track])
+  
+  if (!session || !track?.artwork || !track.title || !track.artist || !track.duration) return null;
 
   return (
    <>
@@ -32,9 +41,9 @@ const Audio = () => {
               <Text className='text-bbaby-text leading-5 text-[13px]'>{track.title}</Text>
               <Text className='text-bbaby-text_darker leading-4 text-[12px]'>{track.artist}</Text>
             </View>
-            <View className='flex-1 h-full w-full items-end justify-center pr-5'>
+            <View className='flex-1 h-full w-full items-end justify-center'>
               <TouchableWithoutFeedback onPress={playPause}>
-                <View className='w-6 h-6'>
+                <View className='px-4 py-2'>
                   {playing ? (
                     <PauseIcon fill={'white'} width={24} height={24} />
                   ) : (

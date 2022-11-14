@@ -5,6 +5,7 @@ export const COLORS = {
   default: '#121212',
   text: '#d4d4d4',
   text_darker: '#606163',
+  border: '#323334',
 };
 
 export const headers = {

@@ -12,8 +12,12 @@ export const useCurrentTrack = (): Track | undefined => {
     useEffect(() => {
         if (index === undefined) return;
         (async () => {
-            const track = await TrackPlayer.getTrack(index);
-            setTrack(track || undefined);
+            try {
+                const track = await TrackPlayer.getTrack(index);
+                setTrack(track || undefined);
+            } catch (err) {
+                console.log(err, 'useCurrentTrack');
+            }
         })
         ();
     }, [index]);

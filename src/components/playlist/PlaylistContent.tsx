@@ -1,10 +1,10 @@
 import {View, Text, TouchableHighlight, Image} from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import {useAudioContext} from '../audio/AudioProvider';
-import {Track} from 'react-native-track-player';
+import TrackPlayer, {Track} from 'react-native-track-player';
 import {Swipeable} from 'react-native-gesture-handler';
 import { swipeToDelete } from './swipeToDelete';
-import { useCurrentTrack } from '../audio/hooks/useCurrentTrack';
+import { useLibraryContext } from '../library/LibraryProvider';
 
 interface PlaylistContent {
   song: Track;
@@ -12,8 +12,8 @@ interface PlaylistContent {
 }
 
 const PlaylistContent = ({song, index}: PlaylistContent) => {
-  const { songs, playSong} = useAudioContext();
-  const track = useCurrentTrack();
+  const {likedSongs} = useLibraryContext();
+  const { playSong, track} = useAudioContext();
   const [current, setCurrent] = useState(false);
 
   if (!song.artwork) return null;
@@ -27,6 +27,16 @@ const PlaylistContent = ({song, index}: PlaylistContent) => {
     }
   }, [track]);
 
+  const play = async () => {
+    try {
+        await TrackPlayer.reset();
+        await TrackPlayer.add(likedSongs);
+        playSong(index);
+    } catch (err) {
+      
+    }
+  }
+
   return (
     <Swipeable
       ref={updateRef}
@@ -34,11 +44,8 @@ const PlaylistContent = ({song, index}: PlaylistContent) => {
       rightThreshold={40}
       renderRightActions={(progress, dragX) => swipeToDelete(progress, dragX)}
       >
-        <View className={`flex-1 overflow-hidden rounded-md ${index === songs.length - 1 ? 'mb-[140px]' : 'mb-0'}`}>
-          <TouchableHighlight
-            onPress={() => {
-              playSong(index);
-            }}>
+        <View className={`flex-1 overflow-hidden rounded-md ${index === likedSongs.length - 1 ? 'mb-[140px]' : 'mb-0'}`}>
+          <TouchableHighlight onPress={play}>
             <View className="mx-2 flex-row items-center h-16">
               <Image
                 className="w-12 h-12"

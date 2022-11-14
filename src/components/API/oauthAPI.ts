@@ -1,3 +1,5 @@
+import { catchError } from "../../config/common"
+
 type UserIPinfo = {
   businessName: string
   businessWebsite: string
@@ -17,11 +19,19 @@ type UserIPinfo = {
 }
 
 export const getUserIP = async ():Promise<UserIPinfo> => {
-    const IP_API_KEY = 'qi3o1QBRtOMYtcYuTLVb'
-    const url = `https://extreme-ip-lookup.com/json?key=${IP_API_KEY}`
-    const res1 = await fetch(url, {
-      method: 'get',
-    })
-    const userIpInfo = await res1.json();
-    return userIpInfo
+    try {
+      const IP_API_KEY = process.env.IP_LOOKUP_API_KEY;
+      const url = `https://extreme-ip-lookup.com/json?key=${IP_API_KEY}`
+      const res = await fetch(url, {
+        method: 'get',
+      })
+      const userIpInfo = await res.json();
+      if (!res.ok) {
+        throw new Error(userIpInfo?.msg);
+      } else {
+        return userIpInfo;
+      }
+    } catch (err) {
+      throw catchError(err);
+    }
 }

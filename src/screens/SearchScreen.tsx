@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import SearchModal from './SearchModal';
 import SearchHeader from '../components/search/SearchHeader';
 
-const SearchScreen = () => { // CREATE A MODAL FOR THE SHOW MODAL PROP AND FIX EVERYTHING
+const SearchScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const textInputRef = useRef<TextInput>(null);
 
