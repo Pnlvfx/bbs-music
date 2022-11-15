@@ -5,10 +5,9 @@ import SearchResult from '../components/search/SearchResult';
 import { SearchTrack } from '../../@types/search';
 interface SearchModal {
   toggleModal: () => void
-  textInputRef: RefObject<TextInput>
 }
 
-const SearchModal = ({toggleModal, textInputRef}: SearchModal) => {
+const SearchModal = ({toggleModal}: SearchModal) => {
   const [results, setResults] = useState<SearchTrack | undefined>();
 
   return (
@@ -16,7 +15,7 @@ const SearchModal = ({toggleModal, textInputRef}: SearchModal) => {
         <View className='pt-14 bg-bbaby-brighter h-[98px] items-center'>
           <View className="h-[33px] flex-row items-center pl-3 bg-bbaby-brighter">
             <View className="flex-1">
-              <SearchBar setResults={setResults} textInputRef={textInputRef} />
+              <SearchBar setResults={setResults} />
             </View>
             <View>
               <TouchableOpacity onPress={toggleModal}>
@@ -35,8 +34,8 @@ const SearchModal = ({toggleModal, textInputRef}: SearchModal) => {
           className="mt-3 h-full"
         >
           {results && results?.songs?.length >= 1 &&
-          results?.songs.map((result, index) => (
-            <SearchResult key={index} result={result} />
+            results?.songs.map((result, index) => (
+              <SearchResult key={index} result={result} />
           ))}
         </ScrollView>
       </View>

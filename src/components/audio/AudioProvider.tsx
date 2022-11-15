@@ -33,16 +33,12 @@ export const AudioContextProvider = ({children}: AudioContextProvider) => {
         try {
             const state = await TrackPlayer.getState();
             if (state === State.Playing) {
-            TrackPlayer.pause();
-            setPlaying(false);
+                await TrackPlayer.pause();
+                return setPlaying(false);
             }
-            if (state === State.Paused) {
-            TrackPlayer.play();
-            setPlaying(true);
-            }
-            if (state === State.Ready) {
-            TrackPlayer.play();
-            setPlaying(true);
+            if (state === State.Paused || State.Ready || State.Connecting) {
+                await TrackPlayer.play();
+                return setPlaying(true);
             }
         } catch (err) {
             console.log(err), 'PlayPause';

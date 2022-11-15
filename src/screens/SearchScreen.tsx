@@ -5,7 +5,6 @@ import SearchHeader from '../components/search/SearchHeader';
 
 const SearchScreen = () => {
   const [showModal, setShowModal] = useState(false);
-  const textInputRef = useRef<TextInput>(null);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -21,7 +20,7 @@ const SearchScreen = () => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
-      {showModal && <SearchModal toggleModal={toggleModal} textInputRef={textInputRef} />}
+      {showModal && <SearchModal toggleModal={toggleModal} />}
     </View>
   );
 };

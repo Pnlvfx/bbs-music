@@ -66,7 +66,7 @@ const Audio = () => {
         </View>
       </TouchableWithoutFeedback>
     </View>
-    <SongModal track={track} show={show} setShow={setShow} />
+    <SongModal show={show} setShow={setShow} />
    </>
   );
 };

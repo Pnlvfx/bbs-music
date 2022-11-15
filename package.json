@@ -35,7 +35,7 @@
     "@babel/runtime": "^7.20.1",
     "@react-native-community/eslint-config": "^3.2.0",
     "@types/react": "^18.0.25",
-    "@types/react-dom": "^18.0.8",
+    "@types/react-dom": "^18.0.9",
     "@types/react-native": "^0.70.6",
     "@types/react-native-video": "^5.0.14",
     "babel-jest": "^29.3.1",

@@ -1,13 +1,45 @@
 import { Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { BluGradient, DropdownIcon, PauseIcon, PlayIcon } from '../../config/SVG';
 import { useAudioContext } from '../audio/AudioProvider';
 import { useLibraryContext } from '../library/LibraryProvider';
+import TrackPlayer, { State } from 'react-native-track-player';
 
 const PlaylistHeader = (props: NativeStackHeaderProps) => {
-    const {playing} = useAudioContext();
+    const [playingLiked, setPlayingLiked] = useState(false);
+    const {setPlaying} = useAudioContext();
     const {likedSongs} = useLibraryContext();
+
+    const playPause = async () => {
+      try {
+          const state = await TrackPlayer.getState();
+          if (state === State.Playing) {
+              await TrackPlayer.pause();
+              setPlaying(false);
+              return setPlayingLiked(false);
+          }
+          if (state === State.Paused || State.Ready || State.Connecting) {
+              await TrackPlayer.play();
+              setPlaying(true);
+              return setPlayingLiked(true);
+          }
+      } catch (err) {
+          console.log(err), 'PlayPauseLiked';
+      }
+  }
+
+    const playLiked = async () => {
+      try {
+        if (!playingLiked) {
+          await TrackPlayer.reset();
+          await TrackPlayer.add(likedSongs);
+        }
+        await playPause();
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
   return (
     <View className='h-[200px] overflow-hidden relative'>
@@ -30,15 +62,15 @@ const PlaylistHeader = (props: NativeStackHeaderProps) => {
           </View>
         </View>
       </View>
-      <View className='bg-blue-400 absolute bottom-4 rounded-full p-4 right-4'>
-        <TouchableOpacity>
-          {playing ? (
-            <PauseIcon fill={'black'} />
+      <TouchableOpacity onPress={playLiked} className='bg-blue-400 absolute bottom-4 rounded-full right-4'>
+        <View className='p-4'>
+          {playingLiked ? (
+            <PauseIcon fill={'black'} width={24} height={24} />
           ) : (
-            <PlayIcon fill={'black'} />
+            <PlayIcon fill={'black'} width={24} height={24} />
           )}
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </View>
   )
 }

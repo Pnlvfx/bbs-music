@@ -1,6 +1,6 @@
 import { View, Text, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import TrackPlayer, { Track, useProgress } from 'react-native-track-player';
+import TrackPlayer, { useProgress } from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
 import AppPlayer from '../audio/utils/AppPlayer';
 import { HeartIcon, HeartIconOutline, NextIcon, PauseIcon, PlayIcon, PrevIcon } from '../../config/SVG';
@@ -8,13 +8,9 @@ import { useAudioContext } from '../audio/AudioProvider';
 import { BASE_URL } from '../../config/config';
 import { useSession } from '../auth/UserProvider';
 
-type PlayerControl = {
-    track: Track
-}
-
-const PlayerControl = ({track}: PlayerControl) => {
+const PlayerControl = () => {
     const progress = useProgress();
-    const {playing, playPause} = useAudioContext();
+    const {playing, playPause, track} = useAudioContext();
     const {session, revalidateSession} = useSession();
     const _liked = session?.user?.liked_songs.find((liked) => liked === track._id);
     const [liked, setLiked] = useState(_liked ? true : false);
@@ -40,7 +36,7 @@ const PlayerControl = ({track}: PlayerControl) => {
                 await TrackPlayer.seekTo(0);
             }
         } catch (err) {
-            console.log(err, 'songModal');
+            console.log(err, 'playerControl');
         }
     }
 

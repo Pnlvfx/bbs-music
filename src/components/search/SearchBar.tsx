@@ -1,5 +1,5 @@
 import {View, TextInput, TouchableOpacity} from 'react-native';
-import React, { Dispatch, RefObject, SetStateAction, useEffect, useState} from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import { COLORS} from '../../config/config';
 import { CloseIcon, SearchIcon } from '../../config/SVG';
 import { catchErrorWithMessage } from '../../config/common';
@@ -8,14 +8,14 @@ import { SearchTrack } from '../../../@types/search';
 import trackapis from '../API/trackAPI';
 
 type SearchBar = {
-  textInputRef: RefObject<TextInput>
   setResults: Dispatch<SetStateAction<SearchTrack | undefined>>
 }
 
-const SearchBar = ({ textInputRef, setResults }: SearchBar) => {
+const SearchBar = ({ setResults }: SearchBar) => {
   const [inputLength, setInputLength] = useState(0);
   const [text, setText] = useState('');
   const message = useMessage();
+  const textInputRef = useRef<TextInput>(null)
 
   const search = async () => {
     try {
@@ -35,6 +35,10 @@ const SearchBar = ({ textInputRef, setResults }: SearchBar) => {
       clearTimeout(timer);
     }
   }, [text])
+
+  useEffect(() => { //open search input on open modal
+    textInputRef.current?.focus();
+  }, [])
 
   return (
     <View className="justify-start items-center flex-row w-full">

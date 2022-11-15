@@ -7,11 +7,11 @@ import TrackPlayer, { Track } from 'react-native-track-player';
 import { useAudioContext } from '../audio/AudioProvider';
 import { catchErrorWithMessage } from '../../config/common';
 import StarIcon from '../utils/StarIcon';
-import { SearchTrack } from '../../../@types/search';
+import { TrackSearch } from '../../../@types/search';
 import audio from '../audio/hooks/audio-hooks';
 
 type SearchResultProps = {
-  result: SearchTrack['songs'][0]
+  result: TrackSearch
 }
 
 const SearchResult = ({ result }: SearchResultProps) => {
@@ -40,14 +40,14 @@ const SearchResult = ({ result }: SearchResultProps) => {
       if (res.ok) {
         await TrackPlayer.reset();
         await TrackPlayer.add(data);
-        playSong(0);
+        await playSong(0);
       } else {
         message.setMessage({value: data?.msg, status: 'error'});
       }
-      setLoading(false);
+      return setLoading(false);
     } catch (err) {
       catchErrorWithMessage(err, message);
-      setLoading(false);
+      throw setLoading(false);
     }
   }
 
@@ -64,15 +64,14 @@ const SearchResult = ({ result }: SearchResultProps) => {
       const newSong = await audio.addNextSong(result.artist, result.title);
       await TrackPlayer.add(newSong, 1);
     } catch (err) {
+      console.log(err);
       catchErrorWithMessage(err, message);
       setLoading(false);
     }
   }
 
   return (
-    <TouchableOpacity onPress={async () => {
-      clickButton();
-    }}>
+    <TouchableOpacity onPress={clickButton}>
       <View className='flex-row items-center justify-center py-3 px-4'>
         <View className='relative w-10 h-10 mr-3'>
           {result.artwork ? (

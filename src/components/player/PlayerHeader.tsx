@@ -1,14 +1,23 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { Dispatch, SetStateAction } from 'react';
 import { DropdownIcon, MoreIcon } from '../../config/SVG';
-import { Track } from 'react-native-track-player';
+import { useAudioContext } from '../audio/AudioProvider';
 
 type PlayerHeader = {
     setShow: Dispatch<SetStateAction<boolean>>
-    track: Track
 }
 
-const PlayerHeader = ({setShow, track}: PlayerHeader) => {
+const PlayerHeader = ({setShow}: PlayerHeader) => {
+    const {track} = useAudioContext();
+
+    const playLiked = async () => {
+        try {
+            
+        } catch (err) {
+            
+        }
+    }
+
   return (
     <View className='flex-row p-2 items-center justify-between mt-[52px]'>
         <TouchableOpacity onPress={() => {

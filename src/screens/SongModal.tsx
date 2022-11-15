@@ -1,6 +1,5 @@
 import { View, Modal, TouchableWithoutFeedback } from 'react-native';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { Track } from 'react-native-track-player';
 import video from '../../assets/video.mp4';
 import Video from 'react-native-video';
 import { useAudioContext } from '../components/audio/AudioProvider';
@@ -10,10 +9,9 @@ import PlayerControl from '../components/player/PlayerControl';
 type ModalProp = {
   show: boolean
   setShow: Dispatch<SetStateAction<boolean>>
-  track: Track
 }
 
-const SongModal = ({show, setShow, track}: ModalProp) => {
+const SongModal = ({show, setShow}: ModalProp) => {
   const {playing} = useAudioContext();
   const [showControl, setShowControl] = useState(true);
 
@@ -50,8 +48,8 @@ const SongModal = ({show, setShow, track}: ModalProp) => {
                 <View className='flex-1 w-full h-full'>
                   {showControl && (
                     <View className='flex-1 w-full h-full' style={{backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
-                      <PlayerHeader track={track} setShow={setShow} />
-                      <PlayerControl track={track} />
+                      <PlayerHeader setShow={setShow} />
+                      <PlayerControl />
                     </View>
                   )}
                 </View>
